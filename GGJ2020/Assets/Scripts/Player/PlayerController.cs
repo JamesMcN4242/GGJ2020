@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
         USE
     }
 
+    private int k_interactableLayerMask = 1 << 8;
+
     [SerializeField]
     private float m_playerMovementSpeed = 2f;
 
@@ -25,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private float m_interactRadius = 30.0f;
 
     private Rigidbody m_rigidBody = null;
-    private Collider[] m_overlappedColliders = new Collider[5];
+    private Collider[] m_overlappedColliders = null;
     private KeyCode[] m_inputButtons = null;
     private GameObject m_interactingObject = null;
 
@@ -120,7 +122,9 @@ public class PlayerController : MonoBehaviour
 
     private GameObject FindObjectsToInteractWith()
     {
-        int collisions = Physics.OverlapSphereNonAlloc(this.transform.position, m_interactRadius, m_overlappedColliders, 0, QueryTriggerInteraction.Ignore);
-        return collisions > 0 ? m_overlappedColliders[0].gameObject : null;
+        m_overlappedColliders = Physics.OverlapSphere(this.transform.position, m_interactRadius, k_interactableLayerMask);
+        return m_overlappedColliders != null && 
+        m_overlappedColliders.Length > 0 && 
+        m_overlappedColliders[0] != null ? m_overlappedColliders[0].gameObject : null;
     }
 }
