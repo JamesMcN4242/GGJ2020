@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour
         LEFT,
         DOWN,
         RIGHT,
-        INTERACT
+        INTERACT,
+        USE
     }
 
     [SerializeField]
@@ -20,8 +21,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float m_maxDirectionalSpeed = 5f;
 
+    [SerializeField]
+    private float m_interactRadius = 30.0f;
+
     private Rigidbody m_rigidBody = null;
+    private Collider[] m_overlappedColliders = new Collider[5];
     private KeyCode[] m_inputButtons = null;
+    private GameObject m_interactingObject = null;
 
     public void Start()
     {
@@ -33,11 +39,43 @@ public class PlayerController : MonoBehaviour
         m_inputButtons = inputButtons;
     }
 
-    public void UpdateMovement()
+    public void UpdatePlayerControls()
+    {
+        UpdateInteractions();
+        if(!IsInteracting)
+        {
+            UpdateMovement();
+        }
+    }
+
+    private void UpdateInteractions()
+    {
+        if(InputKeyDown(InputKeyRelation.INTERACT))
+        {
+            if(!IsInteracting)
+            {
+                m_interactingObject = FindObjectsToInteractWith();
+                if(IsInteracting)
+                {Debug.Log("ITS YA BOI AND HE HAS A FRIEND!");
+                    
+                }
+            }
+            else
+            {
+                //TODO: Update the interacting with object
+            }
+        }
+        else if (IsInteracting)
+        {
+            m_interactingObject = null;
+        }
+    }
+
+    private void UpdateMovement()
     {
         Vector3 velocity = m_rigidBody.velocity;
-        bool movingUp = MovementKeyDown(InputKeyRelation.UP);
-        bool movingDown = MovementKeyDown(InputKeyRelation.DOWN);
+        bool movingUp = InputKeyDown(InputKeyRelation.UP);
+        bool movingDown = InputKeyDown(InputKeyRelation.DOWN);
 
         bool movingBothVerticals = movingUp && movingDown;
         if(!movingBothVerticals)
@@ -52,8 +90,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        bool movingRight = MovementKeyDown(InputKeyRelation.RIGHT);
-        bool movingLeft = MovementKeyDown(InputKeyRelation.LEFT);
+        bool movingRight = InputKeyDown(InputKeyRelation.RIGHT);
+        bool movingLeft = InputKeyDown(InputKeyRelation.LEFT);
         bool movingBothHorizontal = movingRight && movingLeft;
         if(!movingBothHorizontal)
         {
@@ -70,8 +108,19 @@ public class PlayerController : MonoBehaviour
         m_rigidBody.velocity = velocity;
     }
 
-    private bool MovementKeyDown(InputKeyRelation inputType)
+    private bool InputKeyDown(InputKeyRelation inputType)
     {
         return Input.GetKey(m_inputButtons[(int)inputType]);
+    }
+
+    private bool IsInteracting
+    {
+        get { return m_interactingObject != null; }
+    }
+
+    private GameObject FindObjectsToInteractWith()
+    {
+        int collisions = Physics.OverlapSphereNonAlloc(this.transform.position, m_interactRadius, m_overlappedColliders, 0, QueryTriggerInteraction.Ignore);
+        return collisions > 0 ? m_overlappedColliders[0].gameObject : null;
     }
 }
