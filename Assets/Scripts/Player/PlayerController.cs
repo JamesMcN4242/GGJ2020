@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     {
         m_rigidBody = this.GetComponent<Rigidbody>();
         m_animator = GetComponentInChildren<Animator>();
+        m_animator.Play("Idle");
     }
 
     public void SetInputKeys(KeyCode[] inputButtons)
@@ -47,10 +48,19 @@ public class PlayerController : MonoBehaviour
 
     public void UpdatePlayerControls()
     {
-        UpdateInteractions();
-        if(!IsInteracting)
+        if(InputKeyDown(InputKeyRelation.USE))
         {
-            UpdateMovement();
+            m_animator.Play("TPose");
+            m_rigidBody.velocity = Vector3.zero;
+        }
+
+        if(IsTPosing() == false)
+        {
+            UpdateInteractions();
+            if(!IsInteracting)
+            {
+                UpdateMovement();
+            }
         }
     }
 
@@ -59,6 +69,12 @@ public class PlayerController : MonoBehaviour
         int score = m_scoreToAbsorb;
         m_scoreToAbsorb = 0;
         return score;
+    }
+
+    private bool IsTPosing()
+    {
+        var animation = m_animator.GetCurrentAnimatorStateInfo(0);
+        return animation.IsName("TPose") && animation.normalizedTime < 1.0f;
     }
 
     private void UpdateInteractions()
@@ -127,15 +143,23 @@ public class PlayerController : MonoBehaviour
         }
 
         m_rigidBody.velocity = velocity;
-        transform.forward = velocity;
+        if(SpeedLessThanAnimationThreshold() == false)
+        {
+            transform.forward = velocity;
+        }
         string animationName = (!SpeedLessThanAnimationThreshold() ? "Walk" : "Idle");
+        if(animationName == "Idle" && m_animator.GetCurrentAnimatorStateInfo(0).IsName("TPose"))
+        {
+            return;
+        }
         m_animator.Play(animationName);
     }
 
     private bool SpeedLessThanAnimationThreshold()
     {
-        return m_rigidBody.velocity.x < 0.2f && m_rigidBody.velocity.x > -0.2f
-        && m_rigidBody.velocity.z < 0.2f && m_rigidBody.velocity.z > -0.2f;
+        float marginOfError = 0.6f;
+        return m_rigidBody.velocity.x < marginOfError && m_rigidBody.velocity.x > -marginOfError
+        && m_rigidBody.velocity.z < marginOfError && m_rigidBody.velocity.z > -marginOfError;
     }
 
     private bool InputKeyDown(InputKeyRelation inputType)
