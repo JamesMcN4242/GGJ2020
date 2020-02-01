@@ -12,6 +12,14 @@ public class GameManager : MonoBehaviour
         new Vector3(2f, 0f, -2f),
         new Vector3(-2f, 0f, -2f)
     };
+
+    [SerializeField]
+    private Color[] m_playerColours = new Color[]
+    {
+        Color.red,
+        Color.blue
+    };
+
     private PlayerUpdateManager m_playerManager = null;
 
     // Start is called before the first frame update
@@ -19,10 +27,9 @@ public class GameManager : MonoBehaviour
     {
         m_playerManager = new PlayerUpdateManager();
 
-        //TODO: Multiple player choice
         for(int i = 0; i < k_maxPlayers; i++)
         {
-            m_playerManager.RegisterNewPlayer(m_playerStartingPositions[i]);
+            m_playerManager.RegisterNewPlayer(m_playerStartingPositions[i], m_playerColours[i]);
         }
     }
 

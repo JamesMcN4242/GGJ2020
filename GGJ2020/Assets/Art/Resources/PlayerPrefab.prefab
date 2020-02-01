@@ -124,3 +124,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_playerMovementSpeed: 2
   m_maxDirectionalSpeed: 5
+  m_interactRadius: 50
