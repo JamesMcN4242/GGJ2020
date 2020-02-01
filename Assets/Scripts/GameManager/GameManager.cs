@@ -5,6 +5,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private const int k_maxPlayers = 2;
+    [SerializeField]
+    private GameUI m_gameUI = null;
 
     [SerializeField]
     private Vector3[] m_playerStartingPositions = new Vector3[]
@@ -23,6 +25,9 @@ public class GameManager : MonoBehaviour
     private PlayerUpdateManager m_playerManager = null;
     private ScoreManager m_scoreManager = null;
 
+    [SerializeField]
+    private float m_secondsRemaining = 300f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,7 +44,17 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_playerManager.UpdateAllPlayers();
-        //TODO: Update a ui controller
+        if(m_secondsRemaining > 0f)
+        {
+            m_secondsRemaining -= Time.deltaTime;
+            m_gameUI.UpdateGameTimer((int)m_secondsRemaining);
+            var players = m_playerManager.GetRegisteredPlayers();
+            for(int i = 0; i < players.Count; i++)
+            {
+                m_gameUI.UpdatePlayerScore(i, m_scoreManager.GetScoreForPlayer(players[i]));
+            }
+
+            m_playerManager.UpdateAllPlayers();
+        }
     }
 }

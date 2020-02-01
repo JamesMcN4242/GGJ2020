@@ -28,6 +28,10 @@ public class PlayerUpdateManager
         m_players.Add(playerController);
     }   
 
+    public List<PlayerController> GetRegisteredPlayers()
+    {
+        return m_players;
+    }
     public void UpdateAllPlayers()
     {
         for(int i = 0; i < m_players.Count; i++)

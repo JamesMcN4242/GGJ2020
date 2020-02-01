@@ -13,7 +13,7 @@ public class GameUI : MonoBehaviour
 
     public void UpdatePlayerScore(int playerIndex, int score)    
     {
-        m_playerScoreTexts[playerIndex].text = string.Format("Player {0} Score: {1}", playerIndex, score);
+        m_playerScoreTexts[playerIndex].text = string.Format("Player {0} Score: {1}", playerIndex + 1, score);
     }
 
     public void UpdateGameTimer(int secondsRemaining)

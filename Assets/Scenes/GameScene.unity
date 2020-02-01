@@ -668,6 +668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8be76dcb58c49045a8a39a4113a2f9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_gameUI: {fileID: 983661761}
   m_playerStartingPositions:
   - {x: -2, y: 0, z: -2}
   - {x: 2, y: 0, z: -2}
