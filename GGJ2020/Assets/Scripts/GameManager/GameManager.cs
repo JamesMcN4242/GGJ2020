@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     };
 
     private PlayerUpdateManager m_playerManager = null;
+    private ScoreManager m_scoreManager = null;
 
     // Start is called before the first frame update
     void Start()
@@ -31,11 +32,14 @@ public class GameManager : MonoBehaviour
         {
             m_playerManager.RegisterNewPlayer(m_playerStartingPositions[i], m_playerColours[i]);
         }
+
+        m_scoreManager = new ScoreManager();
     }
 
     // Update is called once per frame
     void Update()
     {
         m_playerManager.UpdateAllPlayers();
+        //TODO: Update a ui controller
     }
 }
