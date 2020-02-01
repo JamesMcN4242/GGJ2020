@@ -16,7 +16,12 @@ public class InteractableManager
         var objList = GameObject.FindGameObjectsWithTag("Interactable");
         foreach(var gameObj in objList)
         {
-            var interactObj = gameObj.AddComponent<InteractableObject>();
+
+            var interactObj = gameObj.GetComponent<InteractableObject>();
+            if(interactObj == null)
+            {
+               interactObj = gameObj.AddComponent<InteractableObject>();
+            }
             var canvas = GameObject.Instantiate(GetFillPrefab(),interactObj.transform);
             interactObj.SetCanvasImage(canvas);
         }
