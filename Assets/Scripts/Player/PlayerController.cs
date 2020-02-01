@@ -31,11 +31,13 @@ public class PlayerController : MonoBehaviour
     private KeyCode[] m_inputButtons = null;
     private GameObject m_interactingObject = null;
     private InteractableObject m_interactScript = null;
+    private Animator m_animator = null;
     private int m_scoreToAbsorb = 0;
 
     public void Start()
     {
         m_rigidBody = this.GetComponent<Rigidbody>();
+        m_animator = GetComponentInChildren<Animator>();
     }
 
     public void SetInputKeys(KeyCode[] inputButtons)
@@ -70,6 +72,7 @@ public class PlayerController : MonoBehaviour
                 {
                     m_interactScript = m_interactingObject.GetComponent<InteractableObject>();
                     m_interactScript.SetInteractedWith(true);
+                    m_animator.Play("Repair");
                 }
             }
             else if(m_interactScript.UpdateRepairTiming(Time.deltaTime))
@@ -77,6 +80,7 @@ public class PlayerController : MonoBehaviour
                 m_scoreToAbsorb += m_interactScript.m_scoreForRebuild;
                 m_interactingObject = null;
                 m_interactScript = null;
+                m_animator.Play("Idle");
             }
         }
         else if (IsInteracting)
@@ -84,6 +88,7 @@ public class PlayerController : MonoBehaviour
             m_interactScript.SetInteractedWith(false);
             m_interactScript = null;
             m_interactingObject = null;
+            m_animator.Play("Idle");
         }
     }
 
@@ -122,6 +127,15 @@ public class PlayerController : MonoBehaviour
         }
 
         m_rigidBody.velocity = velocity;
+        transform.forward = velocity;
+        string animationName = (!SpeedLessThanAnimationThreshold() ? "Walk" : "Idle");
+        m_animator.Play(animationName);
+    }
+
+    private bool SpeedLessThanAnimationThreshold()
+    {
+        return m_rigidBody.velocity.x < 0.2f && m_rigidBody.velocity.x > -0.2f
+        && m_rigidBody.velocity.z < 0.2f && m_rigidBody.velocity.z > -0.2f;
     }
 
     private bool InputKeyDown(InputKeyRelation inputType)

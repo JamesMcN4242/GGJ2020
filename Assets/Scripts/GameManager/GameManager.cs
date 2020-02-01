@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
 
         for(int i = 0; i < k_maxPlayers; i++)
         {
-            m_playerManager.RegisterNewPlayer(m_playerStartingPositions[i], m_playerColours[i]);
+            m_playerManager.RegisterNewPlayer(m_playerStartingPositions[i], i);
         }
 
         m_scoreManager = new ScoreManager();

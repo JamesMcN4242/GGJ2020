@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerUpdateManager
 {
-    private const string k_playerPrefabName = "PlayerPrefab";
+    private const string k_playerPrefabName = "PlayerPrefab{0}";
 
     private static readonly List<KeyCode[]> k_playerKeyCodes = new List<KeyCode[]>()
     {
@@ -14,16 +14,12 @@ public class PlayerUpdateManager
     private List<PlayerController> m_players = new List<PlayerController>();
     private GameObject m_prefabObject = null;
 
-    public void RegisterNewPlayer(Vector3 startPosition, Color playerColour)
+    public void RegisterNewPlayer(Vector3 startPosition, int playerIndex)
     {
-        GameObject player = GameObject.Instantiate(GetPrefabObject());
+        GameObject player = GameObject.Instantiate(GetPrefabObject(playerIndex));
         player.transform.position = startPosition;
         PlayerController playerController = player.GetComponent<PlayerController>();
         playerController.SetInputKeys(k_playerKeyCodes[m_players.Count]);
-
-        //Update player colour
-        MeshRenderer playerMesh = player.GetComponent<MeshRenderer>();
-        playerMesh.material.color = playerColour;
     
         m_players.Add(playerController);
     }   
@@ -45,12 +41,8 @@ public class PlayerUpdateManager
         return m_players[index].ConsumeScore();
     }
 
-    private GameObject GetPrefabObject()
+    private GameObject GetPrefabObject(int playerIndex)
     {
-        if(m_prefabObject == null)
-        {
-            m_prefabObject = Resources.Load<GameObject>(k_playerPrefabName);
-        }
-        return m_prefabObject;
+        return Resources.Load<GameObject>(string.Format(k_playerPrefabName, playerIndex+1));
     }
 }
