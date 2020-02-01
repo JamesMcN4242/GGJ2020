@@ -40,6 +40,11 @@ public class PlayerUpdateManager
         }
     }
 
+    public int ConsumeScoreForPlayer(int index)
+    {
+        return m_players[index].ConsumeScore();
+    }
+
     private GameObject GetPrefabObject()
     {
         if(m_prefabObject == null)

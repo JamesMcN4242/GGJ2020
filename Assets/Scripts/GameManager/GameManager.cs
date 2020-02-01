@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
 
     private PlayerUpdateManager m_playerManager = null;
     private ScoreManager m_scoreManager = null;
+    private InteractableManager m_interactManager = null;
 
     [SerializeField]
     private float m_secondsRemaining = 300f;
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
         }
 
         m_scoreManager = new ScoreManager();
+        m_interactManager = new InteractableManager();
     }
 
     // Update is called once per frame
@@ -51,10 +53,14 @@ public class GameManager : MonoBehaviour
             var players = m_playerManager.GetRegisteredPlayers();
             for(int i = 0; i < players.Count; i++)
             {
+                m_scoreManager.AddOrUpdatePlayerScore(players[i], m_playerManager.ConsumeScoreForPlayer(i));
                 m_gameUI.UpdatePlayerScore(i, m_scoreManager.GetScoreForPlayer(players[i]));
             }
 
             m_playerManager.UpdateAllPlayers();
         }
     }
+
+
+
 }
