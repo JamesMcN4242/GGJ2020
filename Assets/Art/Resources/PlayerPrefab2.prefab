@@ -57,7 +57,7 @@ Rigidbody:
   m_GameObject: {fileID: 5036492847709341364}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 2
+  m_Drag: 3
   m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -76,9 +76,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7601b98d353a04b8c030f2ea73725c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_playerMovementSpeed: 8
-  m_maxDirectionalSpeed: 10
-  m_interactRadius: 4
+  m_playerMovementSpeed: 15
+  m_maxDirectionalSpeed: 20
+  m_interactRadius: 2
 --- !u!1001 &4119412849455060148
 PrefabInstance:
   m_ObjectHideFlags: 0
