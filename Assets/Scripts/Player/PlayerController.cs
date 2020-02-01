@@ -137,8 +137,19 @@ public class PlayerController : MonoBehaviour
     private GameObject FindObjectsToInteractWith()
     {
         m_overlappedColliders = Physics.OverlapSphere(this.transform.position, m_interactRadius, k_interactableLayerMask);
-        return m_overlappedColliders != null && 
-        m_overlappedColliders.Length > 0 && 
-        m_overlappedColliders[0] != null ? m_overlappedColliders[0].gameObject : null;
+        if(m_overlappedColliders != null && m_overlappedColliders.Length > 0)
+        {
+            GameObject closest = m_overlappedColliders[0].gameObject;
+            for(int i = 1; i< m_overlappedColliders.Length; i++)
+            {
+                if(Vector3.Distance(closest.transform.position, this.transform.position) 
+                > Vector3.Distance(m_overlappedColliders[i].transform.position, this.transform.position))
+                {
+                    closest = m_overlappedColliders[i].gameObject;
+                }
+            }
+            return closest;
+        }
+        return null;
     }
 }
