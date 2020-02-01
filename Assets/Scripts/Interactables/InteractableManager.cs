@@ -30,7 +30,7 @@ public class InteractableManager
                interactObj = gameObj.AddComponent<InteractableObject>();
             }
             m_interactableObjects.Add(interactObj);
-            var canvas = GameObject.Instantiate(GetFillPrefab(),interactObj.transform);
+            var canvas =interactObj.transform.Find("FillBar").gameObject;
             interactObj.SetUp(canvas);
         }
     }
