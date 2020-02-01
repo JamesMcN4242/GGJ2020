@@ -147,7 +147,7 @@ public class PlayerController : MonoBehaviour
                 > Vector3.Distance(m_overlappedColliders[i].transform.position, this.transform.position) || closest.IsRepairedAlready())
                 {
                     InteractableObject interact = m_overlappedColliders[i].GetComponent<InteractableObject>();
-                    if(!interact.IsRepairedAlready())
+                    if(interact != null && !interact.IsRepairedAlready())
                     {
                         closest = interact;
                     }

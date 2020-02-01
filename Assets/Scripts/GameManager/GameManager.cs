@@ -50,6 +50,8 @@ public class GameManager : MonoBehaviour
         {
             m_secondsRemaining -= Time.deltaTime;
             m_gameUI.UpdateGameTimer((int)m_secondsRemaining);
+            m_interactManager.UpdateInteractableItems();
+
             var players = m_playerManager.GetRegisteredPlayers();
             for(int i = 0; i < players.Count; i++)
             {

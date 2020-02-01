@@ -5,6 +5,7 @@ public class InteractableObject : MonoBehaviour
 {
     public int m_scoreForRebuild = 5;
     public float m_secondsToRebuild = 5f;
+    public float m_timeTillBreaksDown = 10f;
 
     private float m_secondsRepairingFor = 0f;
 
@@ -12,6 +13,10 @@ public class InteractableObject : MonoBehaviour
     private GameObject m_canvasImage = null;
     private RectTransform m_progressBarScale = null;
     private Color m_startingColor;
+    private float m_timeTillBreaking = 0.0f;
+    
+    [SerializeField]
+    private GameObject m_sparksEffect = null;
 
     public void SetUp(GameObject canvas)
     {
@@ -20,6 +25,28 @@ public class InteractableObject : MonoBehaviour
         m_canvasImage.SetActive(false);
 
         m_startingColor = GetComponent<MeshRenderer>().material.color;
+    }
+
+    private void TurnOnSparkEffect(bool on)
+    {
+        if(m_sparksEffect != null)
+        {
+            m_sparksEffect.SetActive(on);
+        }
+    }
+
+    public void UpdateInteractable()
+    {
+        if(IsRepairedAlready())
+        {
+            m_timeTillBreaking -= Time.deltaTime;
+            if(m_timeTillBreaking <= 0f)
+            {
+                m_isRepaired = false;
+                GetComponent<MeshRenderer>().material.color = m_startingColor;
+                TurnOnSparkEffect(true);
+            }
+        }
     }
 
     public bool UpdateRepairTiming(float timeTakenOff)
@@ -32,6 +59,8 @@ public class InteractableObject : MonoBehaviour
             //TODO: Some ceremony boy
             m_canvasImage.SetActive(false);
             GetComponent<MeshRenderer>().material.color = Color.gray;
+            m_timeTillBreaking = m_timeTillBreaksDown;
+            TurnOnSparkEffect(false);
         }
         else
         {

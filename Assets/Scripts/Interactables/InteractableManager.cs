@@ -11,17 +11,25 @@ public class InteractableManager
         RetrieveAndSetUpAllObjects();
     }
 
+    public void UpdateInteractableItems()
+    {
+        foreach(InteractableObject obj in m_interactableObjects)
+        {
+            obj.UpdateInteractable();
+        }
+    }
+
     private void RetrieveAndSetUpAllObjects()
     {
         var objList = GameObject.FindGameObjectsWithTag("Interactable");
         foreach(var gameObj in objList)
         {
-
             var interactObj = gameObj.GetComponent<InteractableObject>();
             if(interactObj == null)
             {
                interactObj = gameObj.AddComponent<InteractableObject>();
             }
+            m_interactableObjects.Add(interactObj);
             var canvas = GameObject.Instantiate(GetFillPrefab(),interactObj.transform);
             interactObj.SetUp(canvas);
         }
