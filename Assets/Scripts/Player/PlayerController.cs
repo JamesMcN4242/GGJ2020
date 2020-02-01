@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     private Collider[] m_overlappedColliders = null;
     private KeyCode[] m_inputButtons = null;
     private GameObject m_interactingObject = null;
+    private InteractableObject m_interactScript = null;
+    private int m_scoreToAbsorb = 0;
 
     public void Start()
     {
@@ -50,6 +52,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public int ConsumeScore()
+    {
+        int score = m_scoreToAbsorb;
+        m_scoreToAbsorb = 0;
+        return score;
+    }
+
     private void UpdateInteractions()
     {
         if(InputKeyDown(InputKeyRelation.INTERACT))
@@ -58,17 +67,22 @@ public class PlayerController : MonoBehaviour
             {
                 m_interactingObject = FindObjectsToInteractWith();
                 if(IsInteracting)
-                {Debug.Log("ITS YA BOI AND HE HAS A FRIEND!");
-                    
+                {
+                    m_interactScript = m_interactingObject.GetComponent<InteractableObject>();
+                    m_interactScript.SetInteractedWith(true);
                 }
             }
-            else
+            else if(m_interactScript.UpdateRepairTiming(Time.deltaTime))
             {
-                //TODO: Update the interacting with object
+                m_scoreToAbsorb += m_interactScript.m_scoreForRebuild;
+                m_interactingObject = null;
+                m_interactScript = null;
             }
         }
         else if (IsInteracting)
         {
+            m_interactScript.SetInteractedWith(false);
+            m_interactScript = null;
             m_interactingObject = null;
         }
     }
