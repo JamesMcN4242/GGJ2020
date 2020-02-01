@@ -91,6 +91,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player2
       objectReference: {fileID: 0}
+    - target: {fileID: -8521960311985063914, guid: 358f0ba3d3e1f4274b22592b76ab657b,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8521960311985063914, guid: 358f0ba3d3e1f4274b22592b76ab657b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2095e3c3275fb4155aa5dea238bcf120, type: 2}
     - target: {fileID: -6057140222963153312, guid: 358f0ba3d3e1f4274b22592b76ab657b,
         type: 3}
       propertyPath: m_Controller
