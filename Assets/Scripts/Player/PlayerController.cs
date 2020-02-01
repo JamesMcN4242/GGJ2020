@@ -139,16 +139,21 @@ public class PlayerController : MonoBehaviour
         m_overlappedColliders = Physics.OverlapSphere(this.transform.position, m_interactRadius, k_interactableLayerMask);
         if(m_overlappedColliders != null && m_overlappedColliders.Length > 0)
         {
-            GameObject closest = m_overlappedColliders[0].gameObject;
+            InteractableObject closest = m_overlappedColliders[0].GetComponent<InteractableObject>();
+
             for(int i = 1; i< m_overlappedColliders.Length; i++)
             {
                 if(Vector3.Distance(closest.transform.position, this.transform.position) 
-                > Vector3.Distance(m_overlappedColliders[i].transform.position, this.transform.position))
+                > Vector3.Distance(m_overlappedColliders[i].transform.position, this.transform.position) || closest.IsRepairedAlready())
                 {
-                    closest = m_overlappedColliders[i].gameObject;
+                    InteractableObject interact = m_overlappedColliders[i].GetComponent<InteractableObject>();
+                    if(!interact.IsRepairedAlready())
+                    {
+                        closest = interact;
+                    }
                 }
             }
-            return closest;
+            return closest.IsRepairedAlready() ? null : closest.gameObject;
         }
         return null;
     }

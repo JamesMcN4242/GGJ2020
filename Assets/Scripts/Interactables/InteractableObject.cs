@@ -7,24 +7,31 @@ public class InteractableObject : MonoBehaviour
     public float m_secondsToRebuild = 5f;
 
     private float m_secondsRepairingFor = 0f;
+
+    private bool m_isRepaired = false;
     private GameObject m_canvasImage = null;
     private RectTransform m_progressBarScale = null;
+    private Color m_startingColor;
 
-    public void SetCanvasImage(GameObject canvas)
+    public void SetUp(GameObject canvas)
     {
         m_canvasImage = canvas;
         m_progressBarScale = m_canvasImage.transform.Find("FillImage") as RectTransform;
         m_canvasImage.SetActive(false);
+
+        m_startingColor = GetComponent<MeshRenderer>().material.color;
     }
 
     public bool UpdateRepairTiming(float timeTakenOff)
     {
         m_secondsRepairingFor += timeTakenOff;
-        bool repaired = m_secondsRepairingFor >= m_secondsToRebuild;
+        m_isRepaired = m_secondsRepairingFor >= m_secondsToRebuild;
 
-        if(repaired)
+        if(m_isRepaired)
         {
             //TODO: Some ceremony boy
+            m_canvasImage.SetActive(false);
+            GetComponent<MeshRenderer>().material.color = Color.gray;
         }
         else
         {
@@ -32,7 +39,12 @@ public class InteractableObject : MonoBehaviour
             m_progressBarScale.offsetMax = new Vector2(0f, m_progressBarScale.offsetMax.y);
         }
 
-        return repaired;
+        return m_isRepaired;
+    }
+
+    public bool IsRepairedAlready()
+    {
+        return m_isRepaired;
     }
 
     public void SetInteractedWith(bool interactingWith)
