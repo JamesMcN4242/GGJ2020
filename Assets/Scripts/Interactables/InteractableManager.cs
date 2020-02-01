@@ -23,7 +23,7 @@ public class InteractableManager
                interactObj = gameObj.AddComponent<InteractableObject>();
             }
             var canvas = GameObject.Instantiate(GetFillPrefab(),interactObj.transform);
-            interactObj.SetCanvasImage(canvas);
+            interactObj.SetUp(canvas);
         }
     }
 
