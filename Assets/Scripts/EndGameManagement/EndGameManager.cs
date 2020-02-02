@@ -23,7 +23,7 @@ public class EndGameManager : MonoBehaviour
 
     void Update()
     {
-        if(m_light.spotAngle < 70f)
+        if(m_light.spotAngle < 75f)
         {
             m_light.spotAngle += (Time.deltaTime * 15f);
         }
