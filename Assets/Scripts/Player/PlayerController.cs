@@ -155,6 +155,11 @@ public class PlayerController : MonoBehaviour
         m_animator.Play(animationName);
     }
 
+    public void PlayTPose()
+    {
+        m_animator.Play("TPose");
+    }
+
     private bool SpeedLessThanAnimationThreshold()
     {
         float marginOfError = 0.6f;
