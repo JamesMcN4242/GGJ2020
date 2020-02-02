@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -60,6 +61,17 @@ public class GameManager : MonoBehaviour
             }
 
             m_playerManager.UpdateAllPlayers();
+        }
+        else
+        {
+            var players = m_playerManager.GetRegisteredPlayers();
+            int playerOneScore = m_scoreManager.GetScoreForPlayer(players[0]);
+            int playerTwoScore = m_scoreManager.GetScoreForPlayer(players[1]);
+
+            WinnerTracker.m_winnerPlayer = playerOneScore > playerTwoScore ? 1 : 2;
+            WinnerTracker.m_loserPlayer = playerOneScore < playerTwoScore ? 1 : 2;
+
+            SceneManager.LoadScene("EndGameScene");
         }
     }
 
