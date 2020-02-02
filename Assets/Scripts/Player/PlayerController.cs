@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
     private float m_timeTillShockAble = 0f;
     private RectTransform m_stunRect = null;
     private float m_stunnedForTime = 0f;
+    private GameObject m_stunnedEffect = null;
 
     public void Start()
     {
@@ -53,6 +54,8 @@ public class PlayerController : MonoBehaviour
         m_rigidBody = this.GetComponent<Rigidbody>();
         m_animator = GetComponentInChildren<Animator>();
         m_animator.Play("Idle");
+        m_stunnedEffect = transform.Find("StunnedVFX").gameObject;
+        m_stunnedEffect.SetActive(false);
     }
 
     public void SetStunUI(RectTransform stunUI)
@@ -77,7 +80,10 @@ public class PlayerController : MonoBehaviour
         if(IsStunned())
         {
             m_stunnedForTime -= Time.deltaTime;
-            
+            if(m_stunnedForTime <= 0f)
+            {
+                m_stunnedEffect.SetActive(false);
+            }
         }
         else
         {
@@ -110,7 +116,9 @@ public class PlayerController : MonoBehaviour
 
     public void SetStunned()
     {
-
+        m_stunnedForTime = m_maxTimePlayerStunned;
+        m_stunnedEffect.SetActive(true);
+        m_rigidBody.velocity = Vector3.zero;
     }
 
     private void StunPlayers()
