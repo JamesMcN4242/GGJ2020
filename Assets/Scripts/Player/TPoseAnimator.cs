@@ -16,4 +16,10 @@ public class TPoseAnimator : MonoBehaviour
     {
         m_animator.Play("TPose");
     }
+
+    public bool AnimationComplete()
+    {
+        var animation = m_animator.GetCurrentAnimatorStateInfo(0);
+        return animation.IsName("TPose") && animation.normalizedTime >= 1f;
+    }
 }

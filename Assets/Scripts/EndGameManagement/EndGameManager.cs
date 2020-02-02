@@ -8,6 +8,7 @@ public class EndGameManager : MonoBehaviour
 
     public Transform m_winnerTransform = null;
     public Transform m_loserTransform = null;
+    public GameObject m_leaveButton = null;
 
     private Light m_light;
     private bool m_tPosingStarted = false;
@@ -31,6 +32,10 @@ public class EndGameManager : MonoBehaviour
         {
             m_tPosingStarted = true;
             m_winnerPlayer.PlayTPose();
+        }
+        else
+        {
+            m_leaveButton.SetActive(m_winnerPlayer.AnimationComplete());
         }
     }
 
