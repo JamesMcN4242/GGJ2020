@@ -7,18 +7,19 @@ public class PlayerUpdateManager
 
     private static readonly List<KeyCode[]> k_playerKeyCodes = new List<KeyCode[]>()
     {
-         new KeyCode[]{KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.E, KeyCode.Q},
-         new KeyCode[]{KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow, KeyCode.Period, KeyCode.Comma}
+         new KeyCode[]{KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.E, KeyCode.T, KeyCode.Q },
+         new KeyCode[]{KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow, KeyCode.Period, KeyCode.Slash, KeyCode.Comma}
     };
 
     private List<PlayerController> m_players = new List<PlayerController>();
 
-    public void RegisterNewPlayer(Vector3 startPosition, int playerIndex)
+    public void RegisterNewPlayer(Vector3 startPosition, int playerIndex, RectTransform stunUI)
     {
         GameObject player = GameObject.Instantiate(GetPrefabObject(playerIndex));
         player.transform.position = startPosition;
         PlayerController playerController = player.GetComponent<PlayerController>();
         playerController.SetInputKeys(k_playerKeyCodes[m_players.Count]);
+        playerController.SetStunUI(stunUI);
     
         m_players.Add(playerController);
     }   

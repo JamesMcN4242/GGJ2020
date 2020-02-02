@@ -12,10 +12,17 @@ public class PlayerController : MonoBehaviour
         DOWN,
         RIGHT,
         INTERACT,
-        USE
+        T_POSE,
+        SHOCK
     }
 
     private int k_interactableLayerMask = 1 << 8;
+
+    [SerializeField]
+    private float m_stunRadius = 2.0f;
+
+    [SerializeField]
+    private float m_timeToUnlockShocking = 4.0f;
 
     [SerializeField]
     private float m_playerMovementSpeed = 2f;
@@ -26,6 +33,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float m_interactRadius = 30.0f;
 
+    [SerializeField]
+    private float m_maxTimePlayerStunned = 4f;
+
     private Rigidbody m_rigidBody = null;
     private Collider[] m_overlappedColliders = null;
     private KeyCode[] m_inputButtons = null;
@@ -33,12 +43,26 @@ public class PlayerController : MonoBehaviour
     private InteractableObject m_interactScript = null;
     private Animator m_animator = null;
     private int m_scoreToAbsorb = 0;
+    private float m_timeTillShockAble = 0f;
+    private RectTransform m_stunRect = null;
+    private float m_stunnedForTime = 0f;
 
     public void Start()
     {
+        m_timeTillShockAble = m_timeToUnlockShocking;
         m_rigidBody = this.GetComponent<Rigidbody>();
         m_animator = GetComponentInChildren<Animator>();
         m_animator.Play("Idle");
+    }
+
+    public void SetStunUI(RectTransform stunUI)
+    {
+        m_stunRect = stunUI;
+    }
+
+    private bool IsStunned()
+    {
+        return m_stunnedForTime > 0f;
     }
 
     public void SetInputKeys(KeyCode[] inputButtons)
@@ -48,7 +72,23 @@ public class PlayerController : MonoBehaviour
 
     public void UpdatePlayerControls()
     {
-        if(InputKeyDown(InputKeyRelation.USE))
+        UpdateUIForStunGun();
+
+        if(IsStunned())
+        {
+            m_stunnedForTime -= Time.deltaTime;
+            
+        }
+        else
+        {
+            UpdateNonStunnedControls();
+        }
+
+    }
+
+    private void UpdateNonStunnedControls()
+    {
+        if(InputKeyDown(InputKeyRelation.T_POSE))
         {
             m_animator.Play("TPose");
             m_rigidBody.velocity = Vector3.zero;
@@ -60,7 +100,48 @@ public class PlayerController : MonoBehaviour
             if(!IsInteracting)
             {
                 UpdateMovement();
+                if(CanStunAndWantsTo())
+                {
+                    StunPlayers();
+                }
             }
+        }
+    }
+
+    public void SetStunned()
+    {
+
+    }
+
+    private void StunPlayers()
+    {
+        PlayerController[] players = GameObject.FindObjectsOfType<PlayerController>();
+        foreach(PlayerController p in players)
+        {
+            if(p != this && Vector3.Distance(transform.position, p.transform.position) <= m_stunRadius)
+            {
+                p.SetStunned();
+            }
+        }
+        m_timeTillShockAble = m_timeToUnlockShocking;
+    }
+
+    public bool CanStunAndWantsTo()
+    {
+        return m_timeTillShockAble <= 0f && InputKeyDown(InputKeyRelation.SHOCK);
+    }
+
+    public void UpdateUIForStunGun()
+    {
+        if(m_timeTillShockAble > 0.0f)
+        {
+            m_timeTillShockAble -= Time.deltaTime;
+            if(m_timeTillShockAble <= 0.0f)
+            {
+                m_timeTillShockAble = 0.0f;
+            }
+            m_stunRect.anchorMax = new Vector2(1.0f, m_timeTillShockAble/m_timeToUnlockShocking);
+            m_stunRect.offsetMax = new Vector2(m_stunRect.offsetMax.x, 0f);
         }
     }
 

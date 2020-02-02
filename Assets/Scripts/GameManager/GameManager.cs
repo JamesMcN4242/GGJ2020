@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     };
 
     [SerializeField]
+    private RectTransform[] m_playerStunUICovers = new RectTransform[2];
+
+    [SerializeField]
     private Color[] m_playerColours = new Color[]
     {
         Color.red,
@@ -37,7 +40,7 @@ public class GameManager : MonoBehaviour
 
         for(int i = 0; i < k_maxPlayers; i++)
         {
-            m_playerManager.RegisterNewPlayer(m_playerStartingPositions[i], i);
+            m_playerManager.RegisterNewPlayer(m_playerStartingPositions[i], i, m_playerStunUICovers[i]);
         }
 
         m_scoreManager = new ScoreManager();
