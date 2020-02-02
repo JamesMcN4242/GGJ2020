@@ -12,11 +12,13 @@ public class InteractableObject : MonoBehaviour
     private bool m_isRepaired = false;
     private GameObject m_canvasImage = null;
     private RectTransform m_progressBarScale = null;
-    private Color m_startingColor;
     private float m_timeTillBreaking = 0.0f;
     
     [SerializeField]
     private GameObject m_sparksEffect = null;
+
+    private Texture m_boxTexture = null;
+    private MeshRenderer m_boxRenderer = null;
 
     public void SetUp(GameObject canvas)
     {
@@ -24,7 +26,8 @@ public class InteractableObject : MonoBehaviour
         m_progressBarScale = m_canvasImage.transform.Find("FillImage") as RectTransform;
         m_canvasImage.SetActive(false);
 
-        m_startingColor = GetComponent<MeshRenderer>().material.color;
+        m_boxRenderer = transform.Find("box_GEO").GetComponent<MeshRenderer>();
+        m_boxTexture = m_boxRenderer.material.GetTexture("_MainTex");
     }
 
     private void TurnOnSparkEffect(bool on)
@@ -43,7 +46,7 @@ public class InteractableObject : MonoBehaviour
             if(m_timeTillBreaking <= 0f)
             {
                 m_isRepaired = false;
-                GetComponent<MeshRenderer>().material.color = m_startingColor;
+                m_boxRenderer.material.SetTexture("_MainTex", m_boxTexture);
                 TurnOnSparkEffect(true);
             }
         }
@@ -56,9 +59,8 @@ public class InteractableObject : MonoBehaviour
 
         if(m_isRepaired)
         {
-            //TODO: Some ceremony boy
             m_canvasImage.SetActive(false);
-            GetComponent<MeshRenderer>().material.color = Color.gray;
+            m_boxRenderer.material.SetTexture("_MainTex", null);
             m_timeTillBreaking = m_timeTillBreaksDown;
             TurnOnSparkEffect(false);
         }
