@@ -12,7 +12,6 @@ public class PlayerUpdateManager
     };
 
     private List<PlayerController> m_players = new List<PlayerController>();
-    private GameObject m_prefabObject = null;
 
     public void RegisterNewPlayer(Vector3 startPosition, int playerIndex)
     {

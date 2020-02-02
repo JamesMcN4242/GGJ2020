@@ -59,7 +59,6 @@ public class InteractableObject : MonoBehaviour
 
         if(m_isRepaired)
         {
-            //TODO: Some ceremony boy
             m_canvasImage.SetActive(false);
             m_boxRenderer.material.SetTexture("_MainTex", null);
             m_timeTillBreaking = m_timeTillBreaksDown;
